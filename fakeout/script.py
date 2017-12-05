@@ -140,9 +140,11 @@ class FakeoutShell(cmd.Cmd):
 
         if self.cart:
             print()
-            print('Cart:')
+            price = sum([p.price for p in self.cart])
+
+            print(f'Cart: ({price})')
             for p in self.cart:
-                print(f'- {p.name}')
+                print(f'- {p.name} ({p.price})')
 
     def do_EOF(self, arg):
         return self.do_exit(arg)
@@ -157,6 +159,7 @@ class FakeoutShell(cmd.Cmd):
         server = None
         token = None
 
+        # Read .fakeoutrc if exists
         rcpath = os.path.expanduser('~/.fakeoutrc')
         if os.path.exists(rcpath):
             print('Using ~/.fakeoutrc')
@@ -164,8 +167,8 @@ class FakeoutShell(cmd.Cmd):
             config = configparser.ConfigParser()
             config.read(rcpath)
 
-            server = config['DEFAULT']['server']
-            token = config['DEFAULT']['token']
+            server = config['DEFAULT'].get('server', None)
+            token = config['DEFAULT'].get('token', None)
 
         self.api = api.CheckoutApi(token, server)
         self.products = []
