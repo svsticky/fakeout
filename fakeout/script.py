@@ -3,6 +3,8 @@ import configparser
 import os
 import readline
 
+import prettytable
+
 from . import api
 
 
@@ -36,8 +38,16 @@ class FakeoutShell(cmd.Cmd):
         else:
             ps = [p for p in self.products if p.category == arg]
 
+        table = prettytable.PrettyTable(['Name', 'Category', 'Price (€)', 'ID'])
+        table.align['Name'] = 'l'
+        table.align['Category'] = 'l'
+        table.align['Price (€)'] = 'r'
+        table.align['ID'] = 'r'
+
         for p in ps:
-            print(p) # Todo prettyprinten
+            table.add_row([p.name, p.category, p.price, p.id])
+
+        print(table)
 
     def do_add(self, arg):
         '''
