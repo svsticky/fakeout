@@ -12,6 +12,13 @@ class CheckoutApi:
         self.token = token
         self.server = server
 
+    @property
+    def token(self):
+        return self._token
+
+    @token.setter
+    def token(self, value):
+        self._token = value
         self.auth = {'token': self.token}
 
     def check_token(self):
