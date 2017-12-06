@@ -10,7 +10,7 @@ from . import api
 
 class FakeoutShell(cmd.Cmd):
     intro = 'Checkout ready! Type `help` or `?` for help.'
-    prompt = '(c-o) '
+    prompt = '[$(o)$] '
     api = None
     products = None
     cart = None
@@ -92,9 +92,13 @@ class FakeoutShell(cmd.Cmd):
         '''
         Attempt to retrieve user information based on a card ID: LOGIN card_id
         '''
-        user = self.api.get_card(arg)
-        self.user = user
+        try:
+            user = self.api.get_card(arg)
+        except api.CheckoutException as e:
+            print(e)
+            return
 
+        self.user = user
         print(f'Logged in as {user.first_name}, balance: {user.balance}')
 
     def do_logout(self, arg):
@@ -112,7 +116,10 @@ class FakeoutShell(cmd.Cmd):
             print('Missing or too many arguments.')
             return
 
-        self.api.create_card(*args)
+        try:
+            self.api.create_card(*args)
+        except api.CheckoutException as e:
+            print(e)
 
     def do_token(self, arg):
         ''' Change the currently used token: TOKEN token '''
