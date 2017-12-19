@@ -67,7 +67,7 @@ class CheckoutApi:
 
         if r.status_code >= 400:
             raise CheckoutException(
-                f'CheckoutException: {r.status_code} {r.response_text}'
+                f'CheckoutException: {r.status_code} {r.text}'
             )
 
 class CheckoutProduct:
@@ -99,9 +99,10 @@ class CheckoutUser:
 
     def purchase(self, cart):
         ''' Purchase the given products. '''
-        ids = [p.id for p in cart]
+        ids = [str(p.id) for p in cart]
+        ids_str = '[' + ','.join(ids) + ']'
 
-        params = {**self.api.auth, 'items': ids, 'uuid': self.uuid}
+        params = {**self.api.auth, 'items': ids_str, 'uuid': self.uuid}
         r = requests.post(
             f'{self.api.server}/api/checkout/transaction',
             params=params
@@ -109,7 +110,7 @@ class CheckoutUser:
 
         if r.status_code >= 400:
             raise CheckoutException(
-                f'CheckoutException: {r.status_code} {r.response_text}'
+                f'CheckoutException: {r.status_code} {r.text}'
             )
 
         response = r.json()
