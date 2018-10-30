@@ -21,8 +21,8 @@ setup(
             ]
         },
     install_requires=[
-        'requests',
-        'prettytable'
+        'requests~=2.20.0',
+        'prettytable~=0.7.2'
     ],
     include_package_data=True,
     zip_safe=False
