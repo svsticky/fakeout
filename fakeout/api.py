@@ -80,7 +80,7 @@ class CheckoutProduct:
         self.name = data['name']
         self.category = data['category']
         self.price = Decimal(data['price'])
-        self.image = data['image']
+        self.image = data.get('image')
 
     def __repr__(self):
         return f"<CheckoutProduct: {self.name} ({self.id}, €{self.price})>"
